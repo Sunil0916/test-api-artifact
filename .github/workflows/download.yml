@@ -1,0 +1,31 @@
+name: Build and Download Artifact
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Build
+      run: make build
+    - name: Create Artifact
+      run: make package
+    - name:  Get Artifact ID
+      run: |
+        ARTIFACT_ID=$(curl https://api.github.com/repos/Sunil0916/test-api-artifact/actions/runs/${{ steps.build.outputs.run_id }}/artifacts \
+        -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" | jq '.[] | select(.name == "artifact.zip") | .id')
+        echo "Artifact ID: $ARTIFACT_ID"
+    - name: Download Artifact
+      run: |
+        curl -L -o artifact.zip \
+            https://api.github.com/repos/Sunil0916/test-api-artifact/actions/runs/${{ steps.build.outputs.run_id }}/artifacts/$ARTIFACT_ID \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}"
+    - name: Unzip Artifact
+      run: |
+        unzip artifact.zip -d artifact
+    - name: Move files
+      run: |
+        mv artifact/* /Sunil0916/test-api-artifact/tree/main/artifacts
+  
