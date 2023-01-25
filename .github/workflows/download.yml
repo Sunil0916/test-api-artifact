@@ -11,6 +11,7 @@ jobs:
     - name: Build
       run: |
         echo "Hello World" > artifact.txt
+        echo run_id
     #- name: Create Artifact
      # run: |
       #  echo "Hello World" > artifact.txt
