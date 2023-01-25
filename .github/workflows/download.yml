@@ -9,10 +9,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Build
-      run: make build
-    - name: Create Artifact
       run: |
         echo "Hello World" > artifact.txt
+    #- name: Create Artifact
+     # run: |
+      #  echo "Hello World" > artifact.txt
     - name:  Get Artifact ID
       run: |
         ARTIFACT_ID=$(curl https://api.github.com/repos/Sunil0916/test-api-artifact/actions/runs/${{ steps.build.outputs.run_id }}/artifacts \
